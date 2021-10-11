@@ -85,6 +85,6 @@ ohos_shared_library("ffi") {
         ":ffi_public_config",
     ]
 
-    part_name = "multimedia_histreamer"
+    part_name = "multimedia_media_standard"
     subsystem_name = "multimedia"
 }
