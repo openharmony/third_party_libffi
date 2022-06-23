@@ -50,7 +50,10 @@
 /* #undef HAVE_AS_X86_64_UNWIND_SECTION_TYPE */
 
 /* Define if your assembler supports PC relative relocs. */
-/* #undef HAVE_AS_X86_PCREL */
+#ifdef __x86_64__
+#define HAVE_AS_X86_PCREL 1
+#define __ILP32__
+#endif
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
 /* #undef HAVE_DLFCN_H */
