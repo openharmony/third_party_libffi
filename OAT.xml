@@ -63,8 +63,18 @@ Note:If the text contains special characters, please escape them according to th
             </policy>
         </policylist>
         <filefilterlist>
+            <filefilter name="defaultPolicyFilter" desc="Filters for files not used">
+                <filteritem type="filepath" name="README.OpenSource" desc="README.OpenSource"/>
+            </filefilter>
             <filefilter name="binaryFileTypePolicyFilter" desc="Filters for binary file policies">
-                <filteritem type="filepath" name=".*" desc="Resource, config and certification binary."/>
+                <filteritem type="filepath" name="doc/.*" desc="Binary files."/>
+                <filteritem type="filepath" name="include/.*" desc="Binary files."/>
+                <filteritem type="filepath" name="libffi.xcodeproj/.*" desc="Binary files."/>
+                <filteritem type="filepath" name="m4/.*" desc="Binary files."/>
+                <filteritem type="filepath" name="man/.*" desc="Binary files."/>
+                <filteritem type="filepath" name="msvc_build/.*" desc="Binary files."/>
+                <filteritem type="filepath" name="src/.*" desc="Binary files."/>
+                <filteritem type="filepath" name="testsuite/.*" desc="Binary files."/>
             </filefilter>
         </filefilterlist>
     </oatconfig>
