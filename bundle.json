@@ -10,11 +10,11 @@
     "dirs": {},
     "scripts": {},
     "component": {
-        "name": "thirdparty_libffi",
-        "subsystem": "",
+        "name": "libffi",
+        "subsystem": "thirdparty",
         "syscap": [],
         "features": [],
-        "adapted_system_type": [],
+        "adapted_system_type": [ "standard" ],
         "rom": "",
         "ram": "",
         "deps": {
