@@ -60,7 +60,6 @@ Note:If the text contains special characters, please escape them according to th
         <policylist>
             <policy name="projectPolicy" desc="">
                 <policyitem type="compatibility" name="InvalidLicense" path="src/dlmalloc.c" rule="may" group="defaultGroup" desc="The files involved in compilation are the InvalidLicense protocol.They are not used."/>
-                <policyitem type="compatibility" name="MIT" path=".*" rule="may" group="defaultGroup" desc="The files involved in compilation are the MIT protocol.They are used in dynamic link mode."/>
             </policy>
         </policylist>
         <filefilterlist>
@@ -81,14 +80,13 @@ Note:If the text contains special characters, please escape them according to th
                 <filteritem type="filepath" name="depcomp" desc="not used"/>
             </filefilter>
             <filefilter name="binaryFileTypePolicyFilter" desc="Filters for binary file policies">
-                <filteritem type="filepath" name="doc/.*" desc="Binary files."/>
-                <filteritem type="filepath" name="include/.*" desc="Binary files."/>
+                <filteritem type="filepath" name="doc/.*" desc="not used."/>
                 <filteritem type="filepath" name="libffi.xcodeproj/.*" desc="Binary files."/>
-                <filteritem type="filepath" name="m4/.*" desc="Binary files."/>
-                <filteritem type="filepath" name="man/.*" desc="Binary files."/>
-                <filteritem type="filepath" name="msvc_build/.*" desc="Binary files."/>
-                <filteritem type="filepath" name="src/.*" desc="Binary files."/>
-                <filteritem type="filepath" name="testsuite/.*" desc="Binary files."/>
+                <filteritem type="filepath" name="m4/.*" desc="not used."/>
+                <filteritem type="filepath" name="man/.*" desc="not used."/>
+                <filteritem type="filepath" name="msvc_build/.*" desc="not used."/>
+                <filteritem type="filepath" name="src/.*" desc="not used."/>
+                <filteritem type="filepath" name="testsuite/.*" desc="not used."/>
             </filefilter>
         </filefilterlist>
     </oatconfig>
