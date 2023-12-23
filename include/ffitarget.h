@@ -16,6 +16,8 @@
 #include "ffitarget-powerpc.h"
 #elif defined(__powerpc64__)
 #include "ffitarget-powerpc64.h"
+#elif defined(__riscv) && (__riscv_xlen == 64)
+#include "ffitarget-riscv64.h"
 #else
 #error "Unsupported Architecture"
 #endif
