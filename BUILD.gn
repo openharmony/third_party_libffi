@@ -64,6 +64,38 @@ if (target_cpu == "arm") {
 
     configs = [ ":ffi_config" ]
   }
+} else if (target_cpu == "riscv64") {
+  config("ffi_config") {
+    visibility = [ ":*" ]
+
+    include_dirs = [
+      ".",
+      "./include",
+      "./src/riscv",
+    ]
+
+    cflags = [
+      "-DTARGET=RISCV64",
+      "-Wno-sign-compare",
+      "-Wno-implicit-function-declaration",
+      "-Wno-extern-initializer",
+    ]
+    cflags += [ "-mno-relax" ]
+  }
+
+  ohos_source_set("ffi_source") {
+    sources = [
+      "src/closures.c",
+      "src/java_raw_api.c",
+      "src/prep_cif.c",
+      "src/raw_api.c",
+      "src/riscv/ffi.c",
+      "src/riscv/sysv.S",
+      "src/types.c",
+    ]
+
+    configs = [ ":ffi_config" ]
+  }
 } else {
   config("ffi_config") {
     visibility = [ ":*" ]
