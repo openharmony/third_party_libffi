@@ -1,0 +1,28 @@
+From b1af55df9b05eaf4b982c135f4ba6f263b72e458 Mon Sep 17 00:00:00 2001
+From: Xin Shi <shixin21@huawei.com>
+Date: Mon, 20 Mar 2023 16:42:57 +0800
+Subject: [PATCH] fix AARCH64EB support
+
+Signed-off-by: Xin Shi <shixin21@huawei.com>
+---
+ src/aarch64/ffi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/aarch64/ffi.c b/src/aarch64/ffi.c
+index 6544ac0..580e965 100644
+--- a/src/aarch64/ffi.c
++++ b/src/aarch64/ffi.c
+@@ -758,6 +758,10 @@ ffi_call_int (ffi_cif *cif, void (*fn)(void), void *orig_rvalue,
+                 }
+                 state.nsrn = N_V_ARG_REG;
+                 dest = allocate_to_stack (&state, stack, ty->alignment, s);
++#ifdef __AARCH64EB__
++                if (t == FFI_TYPE_FLOAT)
++                  dest = dest +4;
++#endif
+               }
+ 	      }
+ 	    else if (s > 16)
+-- 
+2.27.0
+

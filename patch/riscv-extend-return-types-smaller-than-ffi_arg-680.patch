@@ -1,0 +1,51 @@
+From aa3fce08ba620c50db17215a9f14dd0f1facf741 Mon Sep 17 00:00:00 2001
+From: Andreas Schwab <schwab@linux-m68k.org>
+Date: Sun, 13 Feb 2022 21:04:33 +0100
+Subject: [PATCH] riscv: extend return types smaller than ffi_arg (#680)
+
+Co-authored-by: Andreas Schwab <schwab@suse.de>
+---
+ src/riscv/ffi.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/src/riscv/ffi.c b/src/riscv/ffi.c
+index c910858..ebd05ba 100644
+--- a/src/riscv/ffi.c
++++ b/src/riscv/ffi.c
+@@ -373,7 +373,32 @@ ffi_call_int (ffi_cif *cif, void (*fn) (void), void *rvalue, void **avalue,
+ 
+     cb.used_float = cb.used_integer = 0;
+     if (!return_by_ref && rvalue)
+-        unmarshal(&cb, cif->rtype, 0, rvalue);
++      {
++	if (IS_INT(cif->rtype->type)
++	    && cif->rtype->size < sizeof (ffi_arg))
++	  {
++	    /* Integer types smaller than ffi_arg need to be extended.  */
++	    switch (cif->rtype->type)
++	      {
++	      case FFI_TYPE_SINT8:
++	      case FFI_TYPE_SINT16:
++	      case FFI_TYPE_SINT32:
++		unmarshal_atom (&cb, (sizeof (ffi_arg) > 4
++				      ? FFI_TYPE_SINT64 : FFI_TYPE_SINT32),
++				rvalue);
++		break;
++	      case FFI_TYPE_UINT8:
++	      case FFI_TYPE_UINT16:
++	      case FFI_TYPE_UINT32:
++		unmarshal_atom (&cb, (sizeof (ffi_arg) > 4
++				      ? FFI_TYPE_UINT64 : FFI_TYPE_UINT32),
++				rvalue);
++		break;
++	      }
++	  }
++	else
++	  unmarshal(&cb, cif->rtype, 0, rvalue);
++      }
+ }
+ 
+ void
+-- 
+2.39.2
+
