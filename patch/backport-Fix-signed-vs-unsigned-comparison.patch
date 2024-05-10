@@ -1,0 +1,74 @@
+From ebbc5e14cdbfcc24bf3c9bb7b41ee10cd979c535 Mon Sep 17 00:00:00 2001
+From: serge-sans-paille <serge.guelton@telecom-bretagne.eu>
+Date: Thu, 2 Feb 2023 11:40:17 +0000
+Subject: [PATCH] Fix signed vs unsigned comparison (#765)
+
+As reported by -Wsign-compare. In the case of getting the result of
+comparing the result of sysconf (_SC_PAGESIZE) to other value, this also
+correctly handles edge cases where the above fails and returns -1.
+
+Co-authored-by: serge-sans-paille <sguelton@mozilla.com>
+---
+ src/closures.c | 2 +-
+ src/prep_cif.c | 2 +-
+ src/tramp.c    | 7 +++++--
+ 3 files changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/src/closures.c b/src/closures.c
+index 9aafbec4b..c42527795 100644
+--- a/src/closures.c
++++ b/src/closures.c
+@@ -795,7 +795,7 @@ open_temp_exec_file (void)
+ static int
+ allocate_space (int fd, off_t offset, off_t len)
+ {
+-  static size_t page_size;
++  static long page_size;
+ 
+   /* Obtain system page size. */
+   if (!page_size)
+diff --git a/src/prep_cif.c b/src/prep_cif.c
+index 2d0f2521f..0e2d58e5e 100644
+--- a/src/prep_cif.c
++++ b/src/prep_cif.c
+@@ -234,7 +234,7 @@ ffi_status ffi_prep_cif_var(ffi_cif *cif,
+ {
+   ffi_status rc;
+   size_t int_size = ffi_type_sint.size;
+-  int i;
++  unsigned int i;
+ 
+   rc = ffi_prep_cif_core(cif, abi, 1, nfixedargs, ntotalargs, rtype, atypes);
+ 
+diff --git a/src/tramp.c b/src/tramp.c
+index b9d273a1a..7e005b054 100644
+--- a/src/tramp.c
++++ b/src/tramp.c
+@@ -266,7 +266,7 @@ ffi_tramp_get_temp_file (void)
+    * trampoline table to make sure that the temporary file can be mapped.
+    */
+   count = write(tramp_globals.fd, tramp_globals.text, tramp_globals.map_size);
+-  if (count == tramp_globals.map_size && tramp_table_alloc ())
++  if (count >=0 && (size_t)count == tramp_globals.map_size && tramp_table_alloc ())
+     return 1;
+ 
+   close (tramp_globals.fd);
+@@ -374,6 +374,8 @@ tramp_table_unmap (struct tramp_table *table)
+ static int
+ ffi_tramp_init (void)
+ {
++  long page_size;
++
+   if (tramp_globals.status == TRAMP_GLOBALS_PASSED)
+     return 1;
+ 
+@@ -396,7 +398,8 @@ ffi_tramp_init (void)
+     &tramp_globals.map_size);
+   tramp_globals.ntramp = tramp_globals.map_size / tramp_globals.size;
+ 
+-  if (sysconf (_SC_PAGESIZE) > tramp_globals.map_size)
++  page_size = sysconf (_SC_PAGESIZE);
++  if (page_size >= 0 && (size_t)page_size > tramp_globals.map_size)
+     return 0;
+ 
+   if (ffi_tramp_init_os ())
