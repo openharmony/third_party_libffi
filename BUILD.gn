@@ -115,7 +115,22 @@ action("libffi_action") {
 }
 
 config("ffi_public_config") {
-  include_dirs = [ "$libffi_dir/include" ]
+  if (target_cpu == "arm") {
+    include_dirs = [
+      "$libffi_dir/include",
+      "$libffi_dir/src/arm",
+    ]
+  } else if (target_cpu == "x86_64") {
+    include_dirs = [
+      "$libffi_dir/include",
+      "$libffi_dir/src/x86",
+    ]
+  } else {
+    include_dirs = [
+      "$libffi_dir/include",
+      "$libffi_dir/src/aarch64",
+    ]
+  }
 }
 
 ohos_shared_library("ffi") {
@@ -165,7 +180,9 @@ ohos_shared_library("ffi") {
       "$libffi_dir/src/tramp.c",
       "$libffi_dir/src/types.c",
       "$libffi_dir/src/x86/ffi64.c",
+      "$libffi_dir/src/x86/ffiw64.c",
       "$libffi_dir/src/x86/unix64.S",
+      "$libffi_dir/src/x86/win64.S",
     ]
   } else {
     include_dirs = [
